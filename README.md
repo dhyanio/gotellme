@@ -8,3 +8,6 @@ go build -o trace_execve main.go
 ```sh
 sudo ./trace_execve
 ```
+
+Rust
+

@@ -1,0 +1,15 @@
+[package]
+name = "ebpf-rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aya-bpf = { git = "https://github.com/aya-rs/aya", branch = "main" }
+aya-log = { git = "https://github.com/aya-rs/aya", branch = "main" }
+
+[build-dependencies]
+aya-build = { git = "https://github.com/aya-rs/aya", branch = "main" }
+
+[lib]
+name = "ebpf_rust"
+crate-type = ["cdylib"]
