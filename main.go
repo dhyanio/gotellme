@@ -10,11 +10,10 @@ import (
 	"syscall"
 
 	"github.com/cilium/ebpf"
-	"github.com/cilium/ebpf/link"
 	"github.com/cilium/ebpf/perf"
 )
 
-// Event structure matching the eBPF struct
+// Event structure matching Rust eBPF struct
 type Event struct {
 	PID  uint32
 	Comm [16]byte
@@ -22,7 +21,7 @@ type Event struct {
 
 func main() {
 	// Load pre-compiled eBPF object
-	objFile := "trace_execve.o"
+	objFile := "ebpf-rust.o"
 	spec, err := ebpf.LoadCollectionSpec(objFile)
 	if err != nil {
 		log.Fatalf("Failed to load eBPF object: %v", err)
@@ -41,12 +40,12 @@ func main() {
 		log.Fatal("Failed to find eBPF program")
 	}
 
-	// Attach to tracepoint "syscalls:sys_enter_execve"
-	tp, err := link.Tracepoint("syscalls", "sys_enter_execve", prog, nil)
+	// Attach tracepoint
+	link, err := prog.AttachTracepoint("syscalls", "sys_enter_execve")
 	if err != nil {
 		log.Fatalf("Failed to attach tracepoint: %v", err)
 	}
-	defer tp.Close()
+	defer link.Close()
 
 	// Get the event map
 	eventMap := coll.Maps["events"]
